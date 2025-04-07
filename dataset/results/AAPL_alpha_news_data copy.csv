@@ -1,0 +1,7 @@
+published_date,title,summary,ticker,ticker_sentiment_score,ticker_sentiment_label
+20250101T100600,10 Stock Market Predictions for 2025,"Here's what to expect from the stock market, along with some of Wall Street's hottest trends and most influential businesses, in the new year.",AAPL,0.151611,Somewhat-Bullish
+20250101T112008,Should Vanguard S&P 500 Growth ETF  ( VOOG )  Be on Your Investing Radar?,Style Box ETF report for ...,AAPL,0.069019,Neutral
+20250101T112008,Should Vanguard S&P 500 ETF  ( VOO )  Be on Your Investing Radar?,Style Box ETF report for ...,AAPL,0.072464,Neutral
+20250101T141541,"EXCLUSIVE: Top 20 Most-Searched Tickers On Pro In December 2024 - Where Do Tesla, Nvidia, Quantum Computing Stock Rank? - Apple  ( NASDAQ:AAPL ) ","Each trading day features hundreds of headlines and press releases on Benzinga Pro, a source for traders to see the latest news on the overall market and individual tickers. Here is a look at the most-searched stocks on Benzinga Pro for December 2024.",AAPL,0.066368,Neutral
+
+... There are more this is just to show what how we have currently stored the data
