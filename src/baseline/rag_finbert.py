@@ -15,21 +15,66 @@ N_LAGS = 5
 K_RETRIEVAL = 5
 TRAIN_SIZE_RATIO = 0.8
 
-def load_data():
-    """Load and preprocess stock and news data."""
-    # Load stock data
-    stock_df = pd.read_csv(STOCK_FILE, parse_dates=['Date'], index_col='Date')
-    # Handle timezone
-    # if stock_df.index.tz is None:
-    #     stock_df.index = stock_df.index.tz_localize('US/Eastern').tz_convert('UTC')
-    # else:
-    #     stock_df.index = stock_df.index.tz_convert('UTC')
+# def load_data():
+#     """Load and preprocess stock and news data."""
+#     # Load stock data
+#     stock_df = pd.read_csv(STOCK_FILE, parse_dates=['Date'],index_col='Date')
+#     stock_df.reset_index(inplace=True)
+#     print(stock_df.columns)
+#     stock_df['Date'] = pd.to_datetime(stock_df['Date'], utc=True, errors='raise')
     
-    # Load news data
-    news_df = pd.read_csv(NEWS_FILE, parse_dates=['published_date'])
-    news_df['published_date'] = pd.to_datetime(news_df['published_date'], utc=True)
-    # Combine title and summary into a single string
-    news_df['text'] = (news_df['title'].astype(str) + " " + news_df['summary'].astype(str))
+#     # now you can safely do:
+#     stock_df['date'] = stock_df['Date'].dt.tz_convert('UTC').dt.tz_localize(None).dt.strftime("%Y-%m-%d %H:%M:%S")
+
+#     # if you actually want to use “Date” as the index later:
+#     stock_df.set_index('Date', inplace=True)
+#     print('hello ',stock_df.columns,stock_df['Date'][:5])
+#     stock_df['date'] = stock_df['Date'].dt.strftime("%Y-%m-%d %H:%M:%S")
+#     # Handle timezone
+#     # if stock_df.index.tz is None:
+#     #     stock_df.index = stock_df.index.tz_localize('US/Eastern').tz_convert('UTC')
+#     # else:
+#     #     stock_df.index = stock_df.index.tz_convert('UTC')
+    
+#     # Load news data
+#     news_df = pd.read_csv(NEWS_FILE, parse_dates=['published_date'])
+#     news_df['published_date'] = pd.to_datetime(news_df['published_date'], utc=True)
+#     news_df['date'] = news_df['published_date'].dt.strftime("%Y-%m-%d %H:%M:%S")
+#     print(news_df['date'][:5])
+#     # Combine title and summary into a single string
+#     news_df['text'] = (news_df['title'].astype(str) + " " + news_df['summary'].astype(str))
+    
+#     return stock_df, news_df
+
+def load_data():
+    """Load and preprocess stock and news data, coercing both to UTC and stripping tz."""
+    # --- STOCK DATA ---
+    stock_df = pd.read_csv(
+        STOCK_FILE,
+        parse_dates=['Date'],
+        date_parser=lambda x: pd.to_datetime(x, utc=True),  # will parse the “-05:00” offset into UTC
+        index_col=None
+    )
+    # Ensure UTC and then drop tz info
+    stock_df['Date'] = stock_df['Date'].dt.tz_convert('UTC').dt.tz_localize(None)
+    # Store a plain‐string version for merging/plotting
+    stock_df['date'] = stock_df['Date'].dt.strftime("%Y-%m-%d %H:%M:%S")
+    # If you ever need it back as an index:
+    stock_df.set_index('Date', inplace=True)
+    
+    # --- NEWS DATA ---
+    # News dates come in the form “YYYYMMDDTHHMMSS”
+    news_df = pd.read_csv(
+        NEWS_FILE,
+        parse_dates=['published_date'],
+        date_parser=lambda x: pd.to_datetime(x, format='%Y%m%dT%H%M%S', utc=True)
+    )
+    # Drop tz info to match stock_df
+    news_df['published_date'] = news_df['published_date'].dt.tz_convert('UTC').dt.tz_localize(None)
+    news_df['date'] = news_df['published_date'].dt.strftime("%Y-%m-%d %H:%M:%S")
+    
+    # Merge title+summary
+    news_df['text'] = news_df['title'].fillna('') + ' ' + news_df['summary'].fillna('')
     
     return stock_df, news_df
 
