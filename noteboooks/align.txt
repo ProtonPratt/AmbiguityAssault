@@ -1,0 +1,72 @@
+
+--- Processing Ticker: AAPL ---
+Calculating stock features for AAPL...
+Saved processed stock data for AAPL to /ssd_scratch/pratyush/AmbiguityAssault/dataset/aligned_finbert/AAPL_stock_processed.csv
+Stock features head:
+                  Date       Open  ...  volume_to_ma_20  target_next_day_return
+0  2012-01-03 05:00:00  14.621429  ...              NaN                0.005374
+1  2012-01-04 05:00:00  14.642857  ...              NaN                0.011102
+2  2012-01-05 05:00:00  14.819643  ...              NaN                0.010454
+3  2012-01-06 05:00:00  14.991786  ...              NaN               -0.001586
+4  2012-01-09 05:00:00  15.196429  ...              NaN                0.003581
+
+[5 rows x 37 columns]
+Processed news file not found for AAPL: /ssd_scratch/pratyush/AmbiguityAssault/dataset/aligned_finbert/AAPL_news_processed.csv. Skipping merge.
+
+--- Processing Ticker: AMZN ---
+Calculating stock features for AMZN...
+Saved processed stock data for AMZN to /ssd_scratch/pratyush/AmbiguityAssault/dataset/aligned_finbert/AMZN_stock_processed.csv
+Stock features head:
+                  Date    Open  ...  volume_to_ma_20  target_next_day_return
+0  2012-01-03 05:00:00  8.7945  ...              NaN               -0.008490
+1  2012-01-04 05:00:00  8.9605  ...              NaN                0.000563
+2  2012-01-05 05:00:00  8.7970  ...              NaN                0.028152
+3  2012-01-06 05:00:00  8.9035  ...              NaN               -0.022178
+4  2012-01-09 05:00:00  9.1380  ...              NaN                0.004368
+
+[5 rows x 36 columns]
+Processed news file not found for AMZN: /ssd_scratch/pratyush/AmbiguityAssault/dataset/aligned_finbert/AMZN_news_processed.csv. Skipping merge.
+
+--- Processing Ticker: NVDA ---
+Calculating stock features for NVDA...
+Saved processed stock data for NVDA to /ssd_scratch/pratyush/AmbiguityAssault/dataset/aligned_finbert/NVDA_stock_processed.csv
+Stock features head:
+                  Date     Open  ...  volume_to_ma_20  target_next_day_return
+0  2012-01-03 05:00:00  0.35750  ...              NaN                0.011396
+1  2012-01-04 05:00:00  0.35125  ...              NaN                0.035915
+2  2012-01-05 05:00:00  0.35325  ...              NaN               -0.011557
+3  2012-01-06 05:00:00  0.36750  ...              NaN                0.000000
+4  2012-01-09 05:00:00  0.36375  ...              NaN               -0.004126
+
+[5 rows x 37 columns]
+Processed news file not found for NVDA: /ssd_scratch/pratyush/AmbiguityAssault/dataset/aligned_finbert/NVDA_news_processed.csv. Skipping merge.
+
+--- Processing Ticker: TSLA ---
+Calculating stock features for TSLA...
+Saved processed stock data for TSLA to /ssd_scratch/pratyush/AmbiguityAssault/dataset/aligned_finbert/TSLA_stock_processed.csv
+Stock features head:
+                  Date      Open  ...  volume_to_ma_20  target_next_day_return
+0  2012-01-03 05:00:00  1.929333  ...              NaN               -0.013177
+1  2012-01-04 05:00:00  1.880667  ...              NaN               -0.021292
+2  2012-01-05 05:00:00  1.850667  ...              NaN               -0.007743
+3  2012-01-06 05:00:00  1.813333  ...              NaN                0.012635
+4  2012-01-09 05:00:00  1.800000  ...              NaN                0.013578
+
+[5 rows x 36 columns]
+Processed news file not found for TSLA: /ssd_scratch/pratyush/AmbiguityAssault/dataset/aligned_finbert/TSLA_news_processed.csv. Skipping merge.
+
+--- Processing Ticker: NKE ---
+Calculating stock features for NKE...
+Saved processed stock data for NKE to /ssd_scratch/pratyush/AmbiguityAssault/dataset/aligned_finbert/NKE_stock_processed.csv
+Stock features head:
+                  Date       Open  ...  volume_to_ma_20  target_next_day_return
+0  2012-01-03 05:00:00  24.342501  ...              NaN                0.014565
+1  2012-01-04 05:00:00  24.177500  ...              NaN               -0.000611
+2  2012-01-05 05:00:00  24.447500  ...              NaN               -0.001732
+3  2012-01-06 05:00:00  24.482500  ...              NaN                0.003674
+4  2012-01-09 05:00:00  24.525000  ...              NaN                0.001220
+
+[5 rows x 37 columns]
+Processed news file not found for NKE: /ssd_scratch/pratyush/AmbiguityAssault/dataset/aligned_finbert/NKE_news_processed.csv. Skipping merge.
+
+All tickers processed and data prepared for modeling.
