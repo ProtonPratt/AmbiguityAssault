@@ -11,7 +11,7 @@ os.environ['TRANSFORMERS_CACHE'] = os.path.join(os.getcwd(), 'torch_hub', 'trans
 # Import DEVICE and SENTIMENT_MODEL_NAME from config
 # This assumes config.py is in the same directory or PYTHONPATH is set up
 # For simplicity in a script, you might pass these as arguments or define them directly
-from config import SENTIMENT_MODEL_NAME, DEVICE, MODELS_CACHE_DIR # if running as part of a package
+from .config import SENTIMENT_MODEL_NAME, DEVICE, MODELS_CACHE_DIR # if running as part of a package
 # For now, let's assume they are passed or defined globally for the script
 
 class SentimentAnalyzer:
@@ -99,6 +99,7 @@ class SentimentAnalyzer:
 
         # Add a prefix to sentiment columns to avoid name clashes if you use multiple sentiment models
         sentiment_df = sentiment_df.add_prefix("sa_") # sa_ for sentiment_analyzer
+        sentiment_df.columns = [col.lower() for col in sentiment_df.columns]
 
         # Reset index for proper concatenation if df's index is not standard
         df = df.reset_index(drop=True)
