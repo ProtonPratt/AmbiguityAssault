@@ -15,36 +15,6 @@ N_LAGS = 5
 K_RETRIEVAL = 5
 TRAIN_SIZE_RATIO = 0.8
 
-# def load_data():
-#     """Load and preprocess stock and news data."""
-#     # Load stock data
-#     stock_df = pd.read_csv(STOCK_FILE, parse_dates=['Date'],index_col='Date')
-#     stock_df.reset_index(inplace=True)
-#     print(stock_df.columns)
-#     stock_df['Date'] = pd.to_datetime(stock_df['Date'], utc=True, errors='raise')
-    
-#     # now you can safely do:
-#     stock_df['date'] = stock_df['Date'].dt.tz_convert('UTC').dt.tz_localize(None).dt.strftime("%Y-%m-%d %H:%M:%S")
-
-#     # if you actually want to use “Date” as the index later:
-#     stock_df.set_index('Date', inplace=True)
-#     print('hello ',stock_df.columns,stock_df['Date'][:5])
-#     stock_df['date'] = stock_df['Date'].dt.strftime("%Y-%m-%d %H:%M:%S")
-#     # Handle timezone
-#     # if stock_df.index.tz is None:
-#     #     stock_df.index = stock_df.index.tz_localize('US/Eastern').tz_convert('UTC')
-#     # else:
-#     #     stock_df.index = stock_df.index.tz_convert('UTC')
-    
-#     # Load news data
-#     news_df = pd.read_csv(NEWS_FILE, parse_dates=['published_date'])
-#     news_df['published_date'] = pd.to_datetime(news_df['published_date'], utc=True)
-#     news_df['date'] = news_df['published_date'].dt.strftime("%Y-%m-%d %H:%M:%S")
-#     print(news_df['date'][:5])
-#     # Combine title and summary into a single string
-#     news_df['text'] = (news_df['title'].astype(str) + " " + news_df['summary'].astype(str))
-    
-#     return stock_df, news_df
 
 def load_data():
     """Load and preprocess stock and news data, coercing both to UTC and stripping tz."""
