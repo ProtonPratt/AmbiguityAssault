@@ -11,13 +11,25 @@ os.environ['TRANSFORMERS_CACHE'] = os.path.join(os.getcwd(), 'torch_hub', 'trans
 # Import DEVICE and SENTIMENT_MODEL_NAME from config
 # This assumes config.py is in the same directory or PYTHONPATH is set up
 # For simplicity in a script, you might pass these as arguments or define them directly
-# from .config import SENTIMENT_MODEL_NAME, DEVICE # if running as part of a package
+from config import SENTIMENT_MODEL_NAME, DEVICE, MODELS_CACHE_DIR # if running as part of a package
 # For now, let's assume they are passed or defined globally for the script
 
 class SentimentAnalyzer:
     def __init__(self, model_name, device="cpu"):
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForSequenceClassification.from_pretrained(model_name)
+        self.model_cache_dir = MODELS_CACHE_DIR / model_name.replace("/", "_")
+        # Ensure the cache directory exists
+        self.model_cache_dir.mkdir(parents=True, exist_ok=True)
+
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            model_name,
+            cache_dir=self.model_cache_dir
+        )
+        self.model = AutoModelForSequenceClassification.from_pretrained(
+            model_name,
+            cache_dir=self.model_cache_dir
+        )
+        # self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        # self.model = AutoModelForSequenceClassification.from_pretrained(model_name)
         self.device = device
         self.model.to(self.device)
         self.model.eval() # Set model to evaluation mode
@@ -101,7 +113,9 @@ if __name__ == '__main__':
     DEMO_DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Using device: {DEMO_DEVICE}")
 
-    analyzer = SentimentAnalyzer(model_name=DEMO_SENTIMENT_MODEL_NAME, device=DEMO_DEVICE)
+    print(f"Loading sentiment model: {SENTIMENT_MODEL_NAME}")
+
+    analyzer = SentimentAnalyzer(model_name=SENTIMENT_MODEL_NAME, device=DEMO_DEVICE)
 
     # Create a dummy DataFrame
     sample_data = {
