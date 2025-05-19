@@ -2,6 +2,19 @@
 import numpy as np
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 import logging
+# src/utils/evaluation.py
+from sklearn.metrics import mean_squared_error, r2_score, accuracy_score, roc_auc_score, classification_report
+import numpy as np
+
+try:
+    from ..config import PREDICT_DIRECTION, DIRECTION_THRESHOLD
+except ImportError:
+    # Fallback for direct testing or if config is not in standard path relative to this file
+    import sys
+    from pathlib import Path
+    sys.path.append(str(Path(__file__).resolve().parents[1])) # Add src to path
+    from config import PREDICT_DIRECTION, DIRECTION_THRESHOLD
+
 
 def calculate_mae(y_true, y_pred):
     """Calculates Mean Absolute Error."""
@@ -100,6 +113,59 @@ def calculate_sharpe(predictions, actual_returns, risk_free_rate=0.0):
     except Exception as e:
         logging.error(f"Error calculating Sharpe Ratio: {e}")
         return np.nan
+
+
+def evaluate_predictions(y_true_reg, y_true_cls, predictions, model_name: str, ticker: str, model_type: str):
+    """
+    Evaluates model predictions.
+
+    Args:
+        y_true_reg (np.array): True regression targets.
+        y_true_cls (np.array): True classification targets.
+        predictions (np.array): Model's output (raw values for regression, probabilities for classification).
+        model_name (str): Name of the model (e.g., "XGBoost").
+        ticker (str): Stock ticker.
+        model_type (str): "regression" or "classification".
+    """
+    print(f"\n--- Evaluating {model_name} for {ticker} ({model_type}) ---")
+    if model_type == "regression":
+        y_pred_reg = predictions
+        mse = mean_squared_error(y_true_reg, y_pred_reg)
+        r2 = r2_score(y_true_reg, y_pred_reg)
+        print(f"Regression Results:")
+        print(f"  MSE: {mse:.4f}")
+        print(f"  R-squared: {r2:.4f}")
+
+        if PREDICT_DIRECTION and y_true_cls is not None:
+            y_pred_cls_from_reg = (y_pred_reg > DIRECTION_THRESHOLD).astype(int)
+            acc_dir = accuracy_score(y_true_cls, y_pred_cls_from_reg)
+            print(f"  Directional Accuracy (from Reg): {acc_dir:.4f}")
+            # print(classification_report(y_true_cls, y_pred_cls_from_reg, zero_division=0, target_names=['Down','Up']))
+            print(classification_report(y_true_cls, y_pred_cls_from_reg, zero_division=0))
+
+
+    elif model_type == "classification":
+        y_pred_proba = predictions # Assuming predictions are probabilities
+        y_pred_cls = (y_pred_proba > 0.5).astype(int) # Standard threshold
+
+        acc = accuracy_score(y_true_cls, y_pred_cls)
+        try:
+            # Ensure y_true_cls has more than one class for AUC
+            if len(np.unique(y_true_cls)) > 1:
+                auc = roc_auc_score(y_true_cls, y_pred_proba)
+            else:
+                auc = float('nan') # Not calculable with only one class
+        except ValueError:
+            auc = float('nan') # Catch any other ValueError during AUC calculation
+
+        print(f"Classification Results:")
+        print(f"  Accuracy: {acc:.4f}")
+        print(f"  AUC: {auc:.4f}")
+        # print(classification_report(y_true_cls, y_pred_cls, zero_division=0, target_names=['Down','Up']))
+        print(classification_report(y_true_cls, y_pred_cls, zero_division=0))
+
+    else:
+        raise ValueError(f"Unknown model_type: {model_type}")
 
 # Example usage (can be run directly for testing)
 if __name__ == "__main__":

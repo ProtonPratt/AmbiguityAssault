@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 # from .config import ( # if running as part of a package
-#     ALIGN_DATA_DIR, RAW_STOCK_DIR, TICKERS,
+#     PROCESSED_DATA_DIR, RAW_STOCK_DIR, TICKERS,
 #     STOCK_LAG_FEATURES, STOCK_MA_WINDOWS, STOCK_VOLATILITY_WINDOW
 # )
 
@@ -11,17 +11,18 @@ from pathlib import Path
 # (Assuming config.py is in the same directory or accessible via sys.path)
 try:
     from config import (
-        ALIGN_DATA_DIR, RAW_STOCK_DIR, TICKERS,
+        PROCESSED_DATA_DIR, RAW_STOCK_DIR, TICKERS, BASE_DIR,
         STOCK_LAG_FEATURES, STOCK_MA_WINDOWS, STOCK_VOLATILITY_WINDOW
     )
 except ImportError: # Fallback for direct execution if config.py is in parent's parent for example
     import sys
     sys.path.append(str(Path(__file__).resolve().parent.parent)) # Add project root to path
     from src.config import (
-        ALIGN_DATA_DIR, RAW_STOCK_DIR, TICKERS,
+        PROCESSED_DATA_DIR, RAW_STOCK_DIR, TICKERS,
         STOCK_LAG_FEATURES, STOCK_MA_WINDOWS, STOCK_VOLATILITY_WINDOW
     )
 
+# PROCESSED_DATA_DIR = BASE_DIR / "dataset" / "processed_finbert"
 
 def calculate_stock_features(stock_df: pd.DataFrame, ticker: str) -> pd.DataFrame:
     """
@@ -178,7 +179,8 @@ def align_and_merge_data(stock_features_df: pd.DataFrame, daily_news_aggregated_
 
 # --- Main execution logic (can be in a notebook or train_evaluate.py) ---
 if __name__ == '__main__':
-    ALIGN_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    print(f"Processed data directory: {PROCESSED_DATA_DIR}")
 
     for ticker in TICKERS:
         print(f"\n--- Processing Ticker: {ticker} ---")
@@ -195,7 +197,7 @@ if __name__ == '__main__':
             continue
 
         stock_features_df = calculate_stock_features(raw_stock_df, ticker)
-        processed_stock_path = ALIGN_DATA_DIR / f"{ticker}_stock_processed.csv"
+        processed_stock_path = PROCESSED_DATA_DIR / f"{ticker}_stock_processed.csv"
         stock_features_df.to_csv(processed_stock_path, index=False)
         print(f"Saved processed stock data for {ticker} to {processed_stock_path}")
         print("Stock features head:")
@@ -203,7 +205,7 @@ if __name__ == '__main__':
 
 
         # 2. Load processed news data (assumed to be already created by the previous script)
-        processed_news_file_path = ALIGN_DATA_DIR / f"{ticker}_news_processed.csv"
+        processed_news_file_path = PROCESSED_DATA_DIR / f"{ticker}_news_processed.csv"
         if not processed_news_file_path.exists():
             print(f"Processed news file not found for {ticker}: {processed_news_file_path}. Skipping merge.")
             continue
@@ -222,9 +224,9 @@ if __name__ == '__main__':
         # 4. Align and merge stock and news data
         final_features_df = align_and_merge_data(stock_features_df, daily_news_aggregated_df, ticker)
         
-        final_output_path = ALIGN_DATA_DIR / f"{ticker}_features_for_model.parquet" # Using parquet for efficiency
+        final_output_path = PROCESSED_DATA_DIR / f"{ticker}_features_for_model.parquet" # Using parquet for efficiency
         final_features_df.to_parquet(final_output_path, index=False)
-        # Or: final_features_df.to_csv(ALIGN_DATA_DIR / f"{ticker}_features_for_model.csv", index=False)
+        # Or: final_features_df.to_csv(PROCESSED_DATA_DIR / f"{ticker}_features_for_model.csv", index=False)
         print(f"Saved final merged features for {ticker} to {final_output_path}")
         print("Final merged data head:")
         print(final_features_df.head())
